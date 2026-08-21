@@ -35,7 +35,7 @@ llm-pi-ai:
         - id: '${OLLAMA_MODEL_5:-gpt-oss}'
 
     ollama-cloud:
-      apiKeyEnv: '${OLLAMA_API_KEY:-ollama}'
+      apiKeyEnv: '${OLLAMA_API_KEY}'
       api: openai-completions
       baseURL: '${OLLAMA_CLOUD_BASE_URL:-https://ollama.com/v1}'
       models:
