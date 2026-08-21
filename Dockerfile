@@ -38,5 +38,5 @@ VOLUME ["/home/node/.dsh", "/workspace"]
 
 ENTRYPOINT ["/usr/bin/tini", "--", "dsh"]
 
-CMD ["web --no-open"]
+CMD ["web","--no-open"]
 
