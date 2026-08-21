@@ -4,7 +4,6 @@ set -e
 
 PROFILE_DIR="$HOME/.dsh/profiles/web"
 PATCH_FILE="$PROFILE_DIR/cordis.patch.yml"
-CREDENTIALS_FILE="$HOME/.dsh/.credentials.yaml"
 
 mkdir -p "$PROFILE_DIR"
 
@@ -21,11 +20,11 @@ EOF
 
 
 # Configuração dos providers
-cat > "$HOME/.dsh/settings.yaml" <<EOF
+cat > /home/node/.dsh/settings.yaml <<EOF
 llm-pi-ai:
   providers:
     ollama-local:
-      apiKeyEnv: ollama
+      apiKeyEnv: '${OLLAMA_API_KEY:-ollama}'
       api: openai-completions
       baseURL: '${OLLAMA_BASE_URL:-http://ollama:11434/v1}'
       models:
@@ -36,7 +35,7 @@ llm-pi-ai:
         - id: '${OLLAMA_MODEL_5:-gpt-oss}'
 
     ollama-cloud:
-      apiKeyEnv: '${OLLAMA_API_KEY}'
+      apiKeyEnv: '${OLLAMA_API_KEY:-ollama}'
       api: openai-completions
       baseURL: '${OLLAMA_CLOUD_BASE_URL:-https://ollama.com/v1}'
       models:
@@ -46,19 +45,12 @@ llm-pi-ai:
 EOF
 
 # Modelo padrão
-cat > "$HOME/default-model.yaml" <<EOF
+cat > /home/node/default-model.yaml <<'EOF'
 - id: agent-default-model
   config:
     provider: ollama-local
     model: llama3.2
 EOF
-
-# # Configuração do credencial
-# cat > "$CREDENTIALS_FILE" <<EOF
-# OLLAMA_API_KEY: '$OLLAMA_API_KEY'
-# EOF
-
-# chmod 600 "$CREDENTIALS_FILE"
 
 echo "======================================"
 echo " DeepSeek Harness"
