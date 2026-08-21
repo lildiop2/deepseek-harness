@@ -36,9 +36,6 @@ WORKDIR /workspace
 
 EXPOSE 8080
 
-VOLUME [
-    "/home/node/.dsh",
-    "/workspace"
-]
+VOLUME ["/home/node/.dsh", "/workspace"]
 
 ENTRYPOINT ["/usr/bin/tini", "--", "/entrypoint.sh"]
