@@ -36,7 +36,7 @@ EXPOSE 3080
 
 VOLUME ["/home/node/.dsh", "/workspace"]
 
-ENTRYPOINT ["/usr/bin/tini", "--"]
+ENTRYPOINT ["/usr/bin/tini", "--", "dsh"]
 
-CMD ["dsh", "web", "--no-open","--host", "0.0.0.0", "--port", "3080"]
+CMD ["web","--no-open"]
 
