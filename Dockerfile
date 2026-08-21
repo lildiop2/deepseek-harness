@@ -1,11 +1,12 @@
-FROM node:24-bookworm-slim
+FROM node:22-bookworm-slim
 
 ARG DSH_VERSION=latest
 
 ENV NODE_ENV=production \
     HOME=/home/node \
     DSH_TELEMETRY_DISABLED=1 \
-    PATH=/usr/local/bin:$PATH
+    PNPM_HOME=/home/node/.local/share/pnpm \
+    PATH=/home/node/.local/share/pnpm:/usr/local/bin:$PATH
 
 RUN apt-get update \
     && apt-get install -y --no-install-recommends \
@@ -15,13 +16,11 @@ RUN apt-get update \
         bash \
         tini \
     && rm -rf /var/lib/apt/lists/*
-    
-# pnpm
-RUN npm install -g pnpm \
-    && pnpm --version
 
-RUN npm install -g "@deepseek-ai/dsh@${DSH_VERSION}" \
-    && npm cache clean --force
+RUN npm install -g pnpm \
+    && npm install -g "@deepseek-ai/dsh@${DSH_VERSION}" \
+    && dsh --version \
+    && pnpm --version
 
 RUN mkdir -p \
         /home/node/.dsh \
@@ -31,16 +30,44 @@ RUN mkdir -p \
         /home/node \
         /workspace
 
-COPY entrypoint.sh /entrypoint.sh
-
-RUN chmod +x /entrypoint.sh
-
 USER node
 
 WORKDIR /workspace
 
+# Instala o dsh-proxy
+RUN dsh plugin --profile web add github:smanx/dsh-proxy#master
+
+# Configuração dos providers diretamente na imagem
+RUN cat > /home/node/.dsh/settings.yaml <<'EOF'
+ollama:
+  providers:
+    ollama-local:
+      apiKeyEnv: ollama
+      api: openai-completions
+      baseURL: http://ollama:11434/v1
+      models:
+        - id: qwen3.5
+        - id: qwen3-coder
+        - id: deepseek-r1
+
+    ollama-cloud:
+      apiKeyEnv: OLLAMA_API_KEY
+      api: openai-completions
+      baseURL: https://ollama.com/v1
+      models:
+        - id: qwen3-coder:480b
+        - id: deepseek-v3.1:671b
+        - id: gpt-oss:120b
+EOF
+
 EXPOSE 3081
 
-VOLUME ["/home/node/.dsh","/workspace"]
+VOLUME ["/home/node/.dsh", "/workspace"]
 
-ENTRYPOINT ["/usr/bin/tini", "--", "/entrypoint.sh"]
+COPY --chown=node:node entrypoint.sh /home/node/entrypoint.sh
+
+RUN chmod +x /home/node/entrypoint.sh
+
+ENTRYPOINT ["/usr/bin/tini", "--"]
+
+CMD ["/home/node/entrypoint.sh"]
