@@ -32,8 +32,9 @@ llm-pi-ai:
         - id: "qwen3.5"
         - id: "qwen3-coder"
         - id: "deepseek-r1:8b"
-        - id: "llama3.2"
+        - id: "llama3.2:latest"
         - id: "gpt-oss:latest"
+        - id: "nomic-embed-text:latest"
 
     ollama-cloud:
       apiKeyEnv: OLLAMA_API_KEY
@@ -59,7 +60,7 @@ cat > /home/node/default-model.yaml <<'EOF'
 - id: agent-default-model
   config:
     provider: ollama-local
-    model: llama3.2
+    model: "gpt-oss:latest"
 EOF
 
 echo "======================================"
