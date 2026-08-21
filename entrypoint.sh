@@ -4,6 +4,7 @@ set -e
 
 PROFILE_DIR="$HOME/.dsh/profiles/web"
 PATCH_FILE="$PROFILE_DIR/cordis.patch.yml"
+CREDENTIALS_FILE="$HOME/.dsh/.credentials.yaml"
 
 mkdir -p "$PROFILE_DIR"
 
@@ -44,6 +45,12 @@ llm-pi-ai:
         - id: "gpt-oss:120b"
 EOF
 
+# Configuração do credencial
+cat > "$CREDENTIALS_FILE" <<EOF
+OLLAMA_API_KEY: $OLLAMA_API_KEY
+EOF
+
+chmod 600 "$CREDENTIALS_FILE"
 # Modelo padrão
 cat > /home/node/default-model.yaml <<'EOF'
 - id: agent-default-model
