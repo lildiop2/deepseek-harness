@@ -15,12 +15,17 @@ RUN apt-get update \
         bash \
         tini \
     && rm -rf /var/lib/apt/lists/*
+    
+# pnpm
+RUN npm install -g pnpm \
+    && pnpm --version
 
 RUN npm install -g "@deepseek-ai/dsh@${DSH_VERSION}" \
     && npm cache clean --force
 
 RUN mkdir -p \
         /home/node/.dsh \
+        /home/node/.local/share/pnpm \
         /workspace \
     && chown -R node:node \
         /home/node \
