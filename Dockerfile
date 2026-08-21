@@ -2,8 +2,10 @@ FROM node:22-bookworm-slim
 
 ARG DSH_VERSION=latest
 
-ENV NODE_ENV=production
-ENV HOME=/home/node
+ENV NODE_ENV=production \
+    HOME=/home/node \
+    DSH_TELEMETRY_DISABLED=1 \
+    PATH=/usr/local/bin:$PATH
 
 RUN apt-get update \
     && apt-get install -y --no-install-recommends \
@@ -24,17 +26,16 @@ RUN mkdir -p \
         /home/node \
         /workspace
 
+COPY entrypoint.sh /entrypoint.sh
+
+RUN chmod +x /entrypoint.sh
+
 USER node
 
 WORKDIR /workspace
 
-# Instala o proxy oficial da comunidade
-RUN dsh plugin --profile web add github:smanx/dsh-proxy#master
-
 EXPOSE 3081
 
-VOLUME [ "/home/node/.dsh", "/workspace"]
+VOLUME ["/home/node/.dsh","/workspace"]
 
-ENTRYPOINT ["/usr/bin/tini", "--"]
-
-CMD ["dsh", "web", "--no-open"]
+ENTRYPOINT ["/usr/bin/tini", "--", "/entrypoint.sh"]
