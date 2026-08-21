@@ -25,14 +25,14 @@ RUN npm install -g pnpm \
 RUN mkdir -p \
         /home/node/.dsh \
         /home/node/.local/share/pnpm \
-        /workspace \
+        $HOME/workspace \
     && chown -R node:node \
         /home/node \
-        /workspace
+        $HOME/workspace
 
 USER node
 
-WORKDIR /workspace
+WORKDIR $HOME/workspace
 
 # Instala plugins
 RUN dsh plugin --profile web add github:smanx/dsh-proxy#master
