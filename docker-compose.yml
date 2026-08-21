@@ -1,6 +1,6 @@
 services:
   deepseek-harness:
-    image: ghcr.io/lildiop2/deepseek-harness:latest
+    image: ghcr.io/lildiop2/deepseek-harness:${DSH_VERSION:-latest}
 
     container_name: deepseek-harness
 
