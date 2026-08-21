@@ -44,7 +44,7 @@ llm-pi-ai:
 EOF
 
 # Modelo padrão
-cat > "$HOME/default-model.yaml" <<'EOF'
+cat > "$HOME/default-model.yaml" <<EOF
 - id: agent-default-model
   config:
     provider: ollama-local
