@@ -5,6 +5,7 @@ set -e
 PROFILE_DIR="$HOME/.dsh/profiles/web"
 PATCH_FILE="$PROFILE_DIR/cordis.patch.yml"
 CREDENTIALS_FILE="$HOME/.dsh/.credentials.yaml"
+
 mkdir -p "$PROFILE_DIR"
 
 echo "Generating patch file for DeepSeek Harness..."
