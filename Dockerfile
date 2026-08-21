@@ -1,4 +1,4 @@
-FROM node:22-bookworm-slim
+FROM node:24-bookworm-slim
 
 ARG DSH_VERSION=latest
 
@@ -7,7 +7,6 @@ ENV NODE_ENV=production \
     DSH_TELEMETRY_DISABLED=1 \
     PNPM_HOME=/home/node/.local/share/pnpm \
     PATH=/home/node/.local/share/pnpm:/usr/local/bin:$PATH
-
 
 RUN apt-get update \
     && apt-get install -y --no-install-recommends \
@@ -38,44 +37,44 @@ WORKDIR /workspace
 # Instala o dsh-proxy
 RUN dsh plugin --profile web add github:smanx/dsh-proxy#master
 
-# Configuração dos providers diretamente na imagem
-RUN cat > $HOME/.dsh/settings.yaml <<'EOF'
+# Configuração dos providers
+RUN cat > /home/node/.dsh/settings.yaml <<'EOF'
 ollama:
   providers:
     ollama-local:
       apiKeyEnv: ollama
       api: openai-completions
-      baseURL: http://ollama:11434/v1
+      baseURL: "http://ollama:11434/v1"
       models:
-        - id: qwen3.5
-        - id: qwen3-coder
-        - id: deepseek-r1
-        - id: model: llama3.2
-        - id: gpt-oss
+        - id: "qwen3.5"
+        - id: "qwen3-coder"
+        - id: "deepseek-r1"
+        - id: "llama3.2"
+        - id: "gpt-oss"
 
     ollama-cloud:
       apiKeyEnv: OLLAMA_API_KEY
       api: openai-completions
-      baseURL: https://ollama.com/v1
+      baseURL: "https://ollama.com/v1"
       models:
         - id: "qwen3-coder:480b"
         - id: "deepseek-v3.1:671b"
         - id: "gpt-oss:120b"
 EOF
 
+# Modelo padrão
 RUN cat > /home/node/default-model.yaml <<'EOF'
 - id: agent-default-model
   config:
     provider: ollama-local
     model: llama3.2
 EOF
-EXPOSE 3081
-
-VOLUME ["/home/node/.dsh", "/workspace"]
 
 COPY --chown=node:node entrypoint.sh /home/node/entrypoint.sh
 
 RUN chmod +x /home/node/entrypoint.sh
+
+EXPOSE 3081
 
 ENTRYPOINT ["/usr/bin/tini", "--"]
 
