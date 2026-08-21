@@ -24,24 +24,24 @@ cat > /home/node/.dsh/settings.yaml <<EOF
 llm-pi-ai:
   providers:
     ollama-local:
-      apiKeyEnv: '${OLLAMA_API_KEY:-ollama}'
+      apiKeyEnv: ollama
       api: openai-completions
-      baseURL: '${OLLAMA_BASE_URL:-http://ollama:11434/v1}'
+      baseURL: "http://ollama:11434/v1"
       models:
-        - id: '${OLLAMA_MODEL_1:-qwen3.5}'
-        - id: '${OLLAMA_MODEL_2:-qwen3-coder}'
-        - id: '${OLLAMA_MODEL_3:-deepseek-r1}'
-        - id: '${OLLAMA_MODEL_4:-llama3.2}'
-        - id: '${OLLAMA_MODEL_5:-gpt-oss}'
+        - id: "qwen3.5"
+        - id: "qwen3-coder"
+        - id: "deepseek-r1"
+        - id: "llama3.2"
+        - id: "gpt-oss"
 
     ollama-cloud:
-      apiKeyEnv: '${OLLAMA_API_KEY:-ollama}'
+      apiKeyEnv: OLLAMA_API_KEY
       api: openai-completions
-      baseURL: '${OLLAMA_CLOUD_BASE_URL:-https://ollama.com/v1}'
+      baseURL: "https://ollama.com/v1"
       models:
-        - id: '${OLLAMA_CLOUD_MODEL_1:-qwen3-coder:480b}'
-        - id: '${OLLAMA_CLOUD_MODEL_2:-deepseek-v3.1:671b}'
-        - id: '${OLLAMA_CLOUD_MODEL_3:-gpt-oss:120b}'
+        - id: "qwen3-coder:480b"
+        - id: "deepseek-v3.1:671b"
+        - id: "gpt-oss:120b"
 EOF
 
 # Modelo padrão
