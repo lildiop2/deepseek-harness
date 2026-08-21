@@ -13,7 +13,7 @@ cat > "$PATCH_FILE" <<EOF
     listenHost: '${DSH_PROXY_HOST:-0.0.0.0}'
     listenPort: ${DSH_PROXY_PORT:-3081}
     upstreamHost: '${DSH_PROXY_UPSTREAM_HOST:-127.0.0.1}'
-    upstreamPort: ${DSH_PROXY_UPSTREAM_PORT:-0}
+    upstreamPort: ${DSH_PROXY_UPSTREAM_PORT:-3080}
     username: '${DSH_PROXY_USERNAME:-}'
     password: '${DSH_PROXY_PASSWORD:-}'
 EOF
