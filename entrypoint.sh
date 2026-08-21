@@ -31,18 +31,20 @@ llm-pi-ai:
       models:
         - id: "qwen3.5"
         - id: "qwen3-coder"
-        - id: "deepseek-r1"
+        - id: "deepseek-r1:8b"
         - id: "llama3.2"
-        - id: "gpt-oss"
+        - id: "gpt-oss:latest"
 
     ollama-cloud:
       apiKeyEnv: OLLAMA_API_KEY
       api: openai-completions
       baseURL: "https://ollama.com/v1"
       models:
-        - id: "qwen3-coder:480b"
-        - id: "deepseek-v3.1:671b"
-        - id: "gpt-oss:120b"
+        - id: "kimi-k3:cloud"
+        - id: "kimi-k2.7-code:cloud"
+        - id: "deepseek-v4-flash:cloud"
+        - id: "deepseek-v4-pro:cloud"
+        - id: "glm-5.2:cloud"
 EOF
 
 # Configuração do credencial
