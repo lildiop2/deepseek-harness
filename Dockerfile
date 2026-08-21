@@ -58,9 +58,9 @@ ollama:
       api: openai-completions
       baseURL: https://ollama.com/v1
       models:
-        - id: qwen3-coder:480b
-        - id: deepseek-v3.1:671b
-        - id: gpt-oss:120b
+        - id: "qwen3-coder:480b"
+        - id: "deepseek-v3.1:671b"
+        - id: "gpt-oss:120b"
 EOF
 
 RUN cat > /home/node/default-model.yaml <<'EOF'
