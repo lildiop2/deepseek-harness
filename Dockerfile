@@ -37,39 +37,6 @@ WORKDIR /workspace
 # Instala o dsh-proxy
 RUN dsh plugin --profile web add github:smanx/dsh-proxy#master
 
-# Configuração dos providers
-RUN cat > /home/node/.dsh/settings.yaml <<'EOF'
-ollama:
-  providers:
-    ollama-local:
-      apiKeyEnv: ollama
-      api: openai-completions
-      baseURL: "http://ollama:11434/v1"
-      models:
-        - id: "qwen3.5"
-        - id: "qwen3-coder"
-        - id: "deepseek-r1"
-        - id: "llama3.2"
-        - id: "gpt-oss"
-
-    ollama-cloud:
-      apiKeyEnv: OLLAMA_API_KEY
-      api: openai-completions
-      baseURL: "https://ollama.com/v1"
-      models:
-        - id: "qwen3-coder:480b"
-        - id: "deepseek-v3.1:671b"
-        - id: "gpt-oss:120b"
-EOF
-
-# Modelo padrão
-RUN cat > /home/node/default-model.yaml <<'EOF'
-- id: agent-default-model
-  config:
-    provider: ollama-local
-    model: llama3.2
-EOF
-
 COPY --chown=node:node entrypoint.sh /home/node/entrypoint.sh
 
 RUN chmod +x /home/node/entrypoint.sh
