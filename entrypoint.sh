@@ -59,7 +59,8 @@ cat > "$CREDENTIALS_FILE" <<EOF
 OLLAMA_API_KEY: '$OLLAMA_API_KEY'
 EOF
 
-    chmod 600 "$CREDENTIALS_FILE"
+chmod 600 "$CREDENTIALS_FILE"
+
 echo "======================================"
 echo " DeepSeek Harness"
 echo "======================================"
