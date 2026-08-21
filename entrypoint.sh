@@ -6,10 +6,6 @@ PROFILE_DIR="$HOME/.dsh/profiles/web"
 PATCH_FILE="$PROFILE_DIR/cordis.patch.yml"
 
 mkdir -p "$PROFILE_DIR"
-echo
-echo "Installing dsh-proxy..."
-
-dsh plugin --profile web add github:smanx/dsh-proxy#master
 
 cat > "$PATCH_FILE" <<EOF
 - id: dsh-proxy

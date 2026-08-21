@@ -35,6 +35,9 @@ USER node
 
 WORKDIR /workspace
 
+# Instala o dsh-proxy
+RUN dsh plugin --profile web add github:smanx/dsh-proxy#master
+
 # Configuração dos providers diretamente na imagem
 RUN cat > $HOME/.dsh/settings.yaml <<'EOF'
 ollama:
