@@ -25,7 +25,7 @@ cat > /home/node/.dsh/settings.yaml <<EOF
 llm-pi-ai:
   providers:
     ollama-local:
-      apiKeyEnv: OLLAMA_API_KEY
+      apiKeyEnv: OLLAMA
       api: openai-completions
       baseURL: "http://ollama:11434/v1"
       models:
@@ -47,6 +47,7 @@ EOF
 
 # Configuração do credencial
 cat > "$CREDENTIALS_FILE" <<EOF
+OLLAMA: ollama-local-api-key
 OLLAMA_API_KEY: $OLLAMA_API_KEY
 EOF
 
