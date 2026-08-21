@@ -2,9 +2,8 @@ FROM node:22-bookworm-slim
 
 ARG DSH_VERSION=latest
 
-ENV NODE_ENV=production \
-    HOME=/home/node \
-    DSH_TELEMETRY_DISABLED=1
+ENV NODE_ENV=production
+ENV HOME=/home/node
 
 RUN apt-get update \
     && apt-get install -y --no-install-recommends \
@@ -12,7 +11,6 @@ RUN apt-get update \
         git \
         curl \
         bash \
-        nginx \
         tini \
     && rm -rf /var/lib/apt/lists/*
 
@@ -22,20 +20,21 @@ RUN npm install -g "@deepseek-ai/dsh@${DSH_VERSION}" \
 RUN mkdir -p \
         /home/node/.dsh \
         /workspace \
-        /var/log/nginx \
-        /var/lib/nginx \
-        /run/nginx \
-    && chown -R node:node /home/node /workspace
+    && chown -R node:node \
+        /home/node \
+        /workspace
 
-COPY nginx.conf /etc/nginx/nginx.conf
-COPY entrypoint.sh /entrypoint.sh
-
-RUN chmod +x /entrypoint.sh
+USER node
 
 WORKDIR /workspace
 
-EXPOSE 8080
+# Instala o proxy oficial da comunidade
+RUN dsh plugin --profile web add github:smanx/dsh-proxy#master
 
-VOLUME ["/home/node/.dsh", "/workspace"]
+EXPOSE 3081
 
-ENTRYPOINT ["/usr/bin/tini", "--", "/entrypoint.sh"]
+VOLUME [ "/home/node/.dsh", "/workspace"]
+
+ENTRYPOINT ["/usr/bin/tini", "--"]
+
+CMD ["dsh", "web", "--no-open"]
