@@ -1,0 +1,38 @@
+services:
+  deepseek-harness:
+    image: ghcr.io/${GITHUB_REPOSITORY:-seuusuario/deepseek-harness}:latest
+
+    restart: unless-stopped
+
+    ports:
+      - "${DSH_PORT:-3080}:3080"
+
+    environment:
+      TZ: ${TZ:-America/Sao_Paulo}
+      NODE_ENV: production
+      DSH_TELEMETRY_DISABLED: "1"
+
+    volumes:
+      # Configurações e dados do DeepSeek Harness
+      - dsh-home:/home/node/.dsh
+
+      # Workspace para os projetos/código
+      - ./workspace:/workspace
+
+    working_dir: /workspace
+
+    healthcheck:
+      test:
+        - CMD-SHELL
+        - "curl -fsS http://127.0.0.1:3080/ || exit 1"
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 20s
+
+    security_opt:
+      - no-new-privileges:true
+
+volumes:
+  dsh-home:
+
