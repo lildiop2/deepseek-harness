@@ -1,31 +1,34 @@
 services:
   deepseek-harness:
-    build:
-      context: .
-      dockerfile: Dockerfile
-      args:
-        DSH_VERSION: latest
-
-    image: deepseek-harness:latest
+    image: ghcr.io/lildiop2/deepseek-harness:latest
 
     container_name: deepseek-harness
 
     restart: unless-stopped
 
     ports:
-      - "3080:8080"
+      - "${DSH_PROXY_PORT:-3081}:3081"
 
     environment:
-      TZ: America/Sao_Paulo
-      NODE_ENV: production
-      DSH_TELEMETRY_DISABLED: "1"
+      TZ: ${TZ:-America/Sao_Paulo}
+
+      DSH_PROXY_HOST: ${DSH_PROXY_HOST:-0.0.0.0}
+      DSH_PROXY_PORT: ${DSH_PROXY_PORT:-3081}
+      DSH_PROXY_UPSTREAM_HOST: ${DSH_PROXY_UPSTREAM_HOST:-127.0.0.1}
+      DSH_PROXY_UPSTREAM_PORT: ${DSH_PROXY_UPSTREAM_PORT:-0}
+
+      DSH_PROXY_USERNAME: ${DSH_PROXY_USERNAME}
+      DSH_PROXY_PASSWORD: ${DSH_PROXY_PASSWORD}
 
     volumes:
       - dsh-home:/home/node/.dsh
       - ./workspace:/workspace
+
+    working_dir: /workspace
 
     security_opt:
       - no-new-privileges:true
 
 volumes:
   dsh-home:
+    name: deepseek-harness-home
