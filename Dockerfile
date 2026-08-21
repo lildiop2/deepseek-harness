@@ -34,8 +34,11 @@ USER node
 
 WORKDIR /workspace
 
-# Instala o dsh-proxy
+# Instala plugins
 RUN dsh plugin --profile web add github:smanx/dsh-proxy#master
+RUN dsh plugin --profile web add dsh-find-plugin
+
+
 
 COPY --chown=node:node entrypoint.sh /home/node/entrypoint.sh
 
