@@ -8,6 +8,7 @@ ENV NODE_ENV=production \
     PNPM_HOME=/home/node/.local/share/pnpm \
     PATH=/home/node/.local/share/pnpm:/usr/local/bin:$PATH
 
+
 RUN apt-get update \
     && apt-get install -y --no-install-recommends \
         ca-certificates \
@@ -34,11 +35,8 @@ USER node
 
 WORKDIR /workspace
 
-# Instala o dsh-proxy
-RUN dsh plugin --profile web add github:smanx/dsh-proxy#master
-
 # Configuração dos providers diretamente na imagem
-RUN cat > /home/node/.dsh/settings.yaml <<'EOF'
+RUN cat > $HOME/.dsh/settings.yaml <<'EOF'
 ollama:
   providers:
     ollama-local:
@@ -49,6 +47,8 @@ ollama:
         - id: qwen3.5
         - id: qwen3-coder
         - id: deepseek-r1
+        - id: model: llama3.2
+        - id: gpt-oss
 
     ollama-cloud:
       apiKeyEnv: OLLAMA_API_KEY
@@ -60,6 +60,12 @@ ollama:
         - id: gpt-oss:120b
 EOF
 
+RUN cat > /home/node/default-model.yaml <<'EOF'
+- id: agent-default-model
+  config:
+    provider: ollama-local
+    model: llama3.2
+EOF
 EXPOSE 3081
 
 VOLUME ["/home/node/.dsh", "/workspace"]
