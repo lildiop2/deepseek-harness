@@ -8,8 +8,6 @@ CREDENTIALS_FILE="$HOME/.dsh/.credentials.yaml"
 
 mkdir -p "$PROFILE_DIR"
 
-echo "Generating patch file for DeepSeek Harness..."
-echo "Home file: $HOME"
 cat > "$PATCH_FILE" <<EOF
 - id: dsh-proxy
   config:
