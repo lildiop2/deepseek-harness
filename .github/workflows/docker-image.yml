@@ -14,7 +14,6 @@ on:
 env:
   REGISTRY: ghcr.io
   IMAGE_NAME: ${{ github.repository }}
-  BASE_IMAGE: ghcr.io/upstream/dsh
 
 jobs:
   build:
@@ -29,21 +28,6 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Get upstream version
-        id: version
-        run: |
-          VERSION=$(docker buildx imagetools inspect "${BASE_IMAGE}:latest" \
-            --format '{{json .Manifest}}' \
-            | jq -r '.annotations["org.opencontainers.image.version"] // empty')
-
-          if [ -z "$VERSION" ]; then
-            echo "Unable to determine upstream version"
-            exit 1
-          fi
-
-          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
-          echo "DSH_VERSION=$VERSION"
-
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
@@ -55,16 +39,24 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Extract Docker metadata
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          tags: |
+            type=raw,value=${{ vars.DSH_VERSION }},enable=${{ vars.DSH_VERSION != '' }}
+            type=raw,value=latest,enable={{is_default_branch}}
+
       - name: Build and push
         uses: docker/build-push-action@v6
         with:
           context: .
           file: ./Dockerfile
           push: ${{ github.event_name != 'pull_request' }}
-          tags: |
-            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ steps.version.outputs.version }}
-            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
           build-args: |
-            DSH_VERSION=${{ steps.version.outputs.version }}
+            DSH_VERSION=${{ vars.DSH_VERSION || 'latest' }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
