@@ -25,7 +25,7 @@ cat > /home/node/.dsh/settings.yaml <<EOF
 llm-pi-ai:
   providers:
     ollama-local:
-      apiKeyEnv: ollama
+      apiKeyEnv: OLLAMA_API_KEY
       api: openai-completions
       baseURL: "http://ollama:11434/v1"
       models:
